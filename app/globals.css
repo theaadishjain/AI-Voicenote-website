@@ -4,118 +4,112 @@
 
 :root {
   --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 240, 245, 255;
-  --background-end-rgb: 255, 255, 255;
+  --background-start-rgb: 248, 250, 252;
+  --background-end-rgb: 241, 245, 249;
   
-  --primary-rgb: 124, 58, 237;       /* Purple-600 */
-  --primary-light-rgb: 139, 92, 246;  /* Purple-500 */
-  --primary-dark-rgb: 91, 33, 182;    /* Purple-700 */
+  --primary-rgb: 16, 185, 129;      /* Emerald-500 */
+  --primary-light-rgb: 110, 231, 183;/* Emerald-300 */
+  --primary-dark-rgb: 5, 150, 105;   /* Emerald-600 */
   
-  --secondary-rgb: 245, 158, 11;     /* Amber-500 */
-  --secondary-light-rgb: 251, 191, 36; /* Amber-400 */
-  --secondary-dark-rgb: 217, 119, 6;  /* Amber-600 */
+  --secondary-rgb: 236, 72, 153;     /* Pink-500 */
+  --secondary-light-rgb: 244, 114, 182;/* Pink-400 */
+  --secondary-dark-rgb: 219, 39, 119; /* Pink-600 */
   
-  --success-rgb: 34, 197, 94;        /* Green-500 */
+  --accent-rgb: 99, 102, 241;        /* Indigo-500 */
+  --accent-light-rgb: 129, 140, 248; /* Indigo-400 */
+  --accent-dark-rgb: 79, 70, 229;    /* Indigo-600 */
+  
+  --success-rgb: 16, 185, 129;       /* Emerald-500 */
   --error-rgb: 239, 68, 68;          /* Red-500 */
+  --warning-rgb: 245, 158, 11;       /* Amber-500 */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 226, 232, 240;
-    --background-start-rgb: 2, 6, 23;
-    --background-end-rgb: 15, 23, 42;
-    
-    --primary-light-rgb: 139, 92, 246; /* Purple-500 */
-    --primary-rgb: 124, 58, 237;       /* Purple-600 */
-    --primary-dark-rgb: 109, 40, 217;  /* Purple-700 */
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 30, 41, 59;
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-      to bottom,
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
-    )
-    fixed;
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
   min-height: 100vh;
+  padding-bottom: 2rem;
 }
 
 /* Glass card effect */
 .glass-card {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.glass-card:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   .glass-card {
-    background: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(51, 65, 85, 0.5);
   }
 }
 
-/* Gradient Text */
+/* Gradient text */
 .gradient-text {
-  @apply text-transparent bg-clip-text;
-  background-image: linear-gradient(
-    135deg, 
-    rgb(var(--primary-light-rgb)) 0%,
-    rgb(var(--primary-rgb)) 50%,
-    rgb(var(--secondary-rgb)) 100%
-  );
+  @apply bg-gradient-to-r from-emerald-500 to-pink-500 bg-clip-text text-transparent;
 }
 
-/* Button Styles */
+/* Button styles */
 .btn-primary {
-  @apply px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 
-    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
-}
-
-.btn-success {
-  @apply px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 
-    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+  @apply flex items-center justify-center px-5 py-2.5 font-medium rounded-xl text-white bg-gradient-to-br from-emerald-400 to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 focus:ring-4 focus:ring-emerald-300 dark:focus:ring-emerald-800 shadow-md hover:shadow-lg transition-all duration-200;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 
-    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+  @apply flex items-center justify-center px-5 py-2.5 font-medium rounded-xl text-white bg-gradient-to-br from-pink-400 to-pink-600 hover:from-pink-500 hover:to-pink-700 focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800 shadow-md hover:shadow-lg transition-all duration-200;
 }
 
 .btn-outline {
-  @apply px-4 py-2 border border-purple-600 text-purple-600 rounded-lg 
-    hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-900 dark:hover:bg-opacity-20
-    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+  @apply flex items-center justify-center px-5 py-2.5 font-medium rounded-xl text-emerald-600 dark:text-emerald-400 border border-emerald-500 dark:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 focus:ring-4 focus:ring-emerald-300/30 dark:focus:ring-emerald-800/30 transition-all duration-200;
 }
 
-/* Input Field */
+/* Input fields */
 .input-field {
-  @apply px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
-    rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none
-    transition-all shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+  @apply px-4 py-2.5 bg-white/70 dark:bg-zinc-800/70 border border-gray-200 dark:border-zinc-700 rounded-xl focus:ring-4 focus:ring-emerald-300/30 dark:focus:ring-emerald-800/30 focus:border-emerald-500 dark:focus:border-emerald-600 outline-none transition-all duration-200 backdrop-blur-sm;
 }
 
-/* Animated Gradient Button */
+/* Animated gradient button */
 .animated-gradient-btn {
-  background-size: 200% 200%;
-  background-image: linear-gradient(
-    45deg,
+  @apply relative overflow-hidden rounded-xl font-medium px-5 py-2.5 shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+.animated-gradient-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    120deg,
     rgb(var(--primary-rgb)),
-    rgb(var(--primary-light-rgb)),
     rgb(var(--secondary-rgb)),
+    rgb(var(--accent-rgb)),
     rgb(var(--primary-rgb))
   );
-  animation: gradientShift 3s ease infinite;
+  background-size: 300% 300%;
+  animation: gradient-animation 6s ease infinite;
+  z-index: -1;
 }
 
-@keyframes gradientShift {
+.animated-gradient-btn span {
+  @apply text-white relative z-10;
+}
+
+@keyframes gradient-animation {
   0% {
     background-position: 0% 50%;
   }
@@ -127,61 +121,102 @@ body {
   }
 }
 
-/* Weather gradient backgrounds */
+/* Weather gradients */
 .weather-gradient-clear {
-  background: linear-gradient(135deg, #4da0ff, #a891ff);
+  background: linear-gradient(120deg, #4ade80, #3b82f6);
 }
 
 .weather-gradient-clouds {
-  background: linear-gradient(135deg, #b6bac5, #e2e6ea);
+  background: linear-gradient(120deg, #94a3b8, #64748b);
 }
 
 .weather-gradient-rain {
-  background: linear-gradient(135deg, #48525c, #a0b4c8);
-}
-
-.weather-gradient-thunderstorm {
-  background: linear-gradient(135deg, #384048, #7676b3);
+  background: linear-gradient(120deg, #60a5fa, #3b82f6);
 }
 
 .weather-gradient-snow {
-  background: linear-gradient(135deg, #b8c9db, #ffffff);
+  background: linear-gradient(120deg, #e2e8f0, #cbd5e1);
 }
 
-.weather-gradient-mist {
-  background: linear-gradient(135deg, #788795, #b1c4d6);
+.weather-gradient-storm {
+  background: linear-gradient(120deg, #6366f1, #4338ca);
 }
 
-.weather-gradient-default {
-  background: linear-gradient(135deg, #5d8fc9, #9bafd1);
+.weather-gradient-fog {
+  background: linear-gradient(120deg, #d1d5db, #9ca3af);
 }
 
+/* Dark mode adjustments for weather gradients */
 @media (prefers-color-scheme: dark) {
   .weather-gradient-clear {
-    background: linear-gradient(135deg, #1a4b91, #4a3cb7);
+    background: linear-gradient(120deg, #22c55e, #3b82f6);
   }
   
   .weather-gradient-clouds {
-    background: linear-gradient(135deg, #434a59, #61656d);
+    background: linear-gradient(120deg, #475569, #334155);
   }
   
   .weather-gradient-rain {
-    background: linear-gradient(135deg, #2c333a, #455a6b);
-  }
-  
-  .weather-gradient-thunderstorm {
-    background: linear-gradient(135deg, #22262e, #3a3a70);
+    background: linear-gradient(120deg, #3b82f6, #1d4ed8);
   }
   
   .weather-gradient-snow {
-    background: linear-gradient(135deg, #536476, #97a5b2);
+    background: linear-gradient(120deg, #9ca3af, #64748b);
   }
   
-  .weather-gradient-mist {
-    background: linear-gradient(135deg, #3e454d, #627588);
+  .weather-gradient-storm {
+    background: linear-gradient(120deg, #4f46e5, #3730a3);
   }
   
-  .weather-gradient-default {
-    background: linear-gradient(135deg, #294569, #4c586d);
+  .weather-gradient-fog {
+    background: linear-gradient(120deg, #9ca3af, #64748b);
   }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+@keyframes slideInFromBottom {
+  from { 
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideInFromBottom 0.3s ease-out forwards;
+}
+
+/* Additional utility classes */
+.shadow-soft {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-inner-soft {
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+/* Focus rings */
+.focus-ring {
+  @apply focus:outline-none focus:ring-4 focus:ring-emerald-300/50 dark:focus:ring-emerald-800/50;
 } 

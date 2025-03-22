@@ -1,30 +1,58 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET() {
-  // Replace with your actual OpenWeather API key
-  const API_KEY = process.env.OPENWEATHER_API_KEY || 'your_openweather_api_key';
-  
-  // Default to London if geolocation not available in backend
-  const city = 'London'; 
-  
+export async function GET(request: NextRequest) {
   try {
+    // Get the city from query parameters, default to London
+    const { searchParams } = new URL(request.url);
+    const city = searchParams.get('city') || 'London';
+    
+    // Check if API key is configured
+    const apiKey = process.env.OPENWEATHER_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Weather API key not configured' },
+        { status: 500 }
+      );
+    }
+    
+    // Fetch weather data from OpenWeatherMap API
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`
     );
     
     const data = response.data;
     
-    return NextResponse.json({
+    // Transform the response data into our format
+    const weatherData = {
+      city: data.name,
       temperature: data.main.temp,
       description: data.weather[0].description,
-      icon: data.weather[0].icon,
-      city: data.name,
       humidity: data.main.humidity,
       windSpeed: data.wind.speed,
-    });
-  } catch (error) {
+      icon: data.weather[0].icon,
+    };
+    
+    return NextResponse.json(weatherData);
+  } catch (error: any) {
     console.error('Error fetching weather data:', error);
+    
+    // Check if it's a 404 error (city not found)
+    if (error.response && error.response.status === 404) {
+      return NextResponse.json(
+        { error: 'City not found. Please check the spelling and try again.' },
+        { status: 404 }
+      );
+    }
+    
+    // Handle API key errors
+    if (error.response && error.response.status === 401) {
+      return NextResponse.json(
+        { error: 'Invalid API key or authorization error' },
+        { status: 401 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Failed to fetch weather data' },
       { status: 500 }

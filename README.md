@@ -1,78 +1,101 @@
-# AI Morning Voice Note: Daily Weather & Motivation
+# AI Weather Voice Assistant
 
-A web application that automatically generates and sends personalized voice notes with weather information and motivational messages.
+A modern web application that provides personalized weather updates and motivational messages delivered as voice notes via Telegram or email.
 
 ## Features
 
-- **Current Weather Information**: Fetches real-time weather data for the user's location
-- **Daily Motivational Messages**: Provides an inspiring quote each day
-- **Text-to-Speech Conversion**: Converts text to speech for audio playback
-- **Multiple Delivery Methods**: Send via Email, WhatsApp, or Telegram
-- **Automated Daily Notifications**: Schedule voice notes to be sent at 6 AM daily
-- **Manual Trigger**: Generate and send voice notes on demand
+- **Real-time Weather Updates**: Fetches current weather data based on user location
+- **Motivational Messages**: Delivers AI-generated motivational quotes tailored to the weather
+- **Voice Note Delivery**: Converts messages to natural-sounding voice notes
+- **Multiple Delivery Methods**: Send voice notes via Telegram or email
+- **Auto Notifications**: Schedule daily updates at your preferred time
+- **Modern UI**: Clean, responsive design with glass-card effects and dynamic weather themes
 
 ## Tech Stack
 
 - **Frontend**: Next.js, React, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **APIs**: 
-  - Weather data from OpenWeatherMap
-  - Text-to-Speech conversion (placeholder for integration)
-  - Email delivery with Nodemailer (placeholder for integration)
-  - WhatsApp/Telegram integration (placeholder)
-- **Automation**: Node-cron for scheduling (placeholder for implementation)
+- **AI Integration**: Google Gemini API for generating motivational content
+- **Text-to-Speech**: Google Cloud TTS for natural voice conversion
+- **Messaging**: Telegram Bot API for message delivery
+- **Styling**: Custom CSS with glass morphism effects and dynamic themes
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 16.x or higher
+- npm or yarn
+- Google Cloud account (for TTS)
+- Gemini API access
+- Telegram Bot (optional, for Telegram delivery)
 
 ### Installation
 
-1. Clone this repository
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/ai-weathervoice.git
+   cd ai-weathervoice
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Create a `.env.local` file based on the `.env.example` template:
+   ```
+   cp .env.example .env.local
+   ```
+
+4. Fill in your API keys and credentials in the `.env.local` file
+
+5. Start the development server:
+   ```
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### API Setup
+
+#### Google Cloud TTS
+1. Create a Google Cloud account and enable the Text-to-Speech API
+2. Create a service account with Text-to-Speech access permissions
+3. Download the JSON credentials file
+4. Set the path to this file in your `.env.local`
+
+#### Telegram Bot
+1. Message [@BotFather](https://t.me/BotFather) on Telegram
+2. Create a new bot with `/newbot` command
+3. Copy the API token to your `.env.local` file
+4. Start a conversation with your bot to enable messaging
+
+## Usage
+
+1. View the current weather on the home page
+2. Read the AI-generated motivational message
+3. Use the Voice Note Controls to:
+   - Generate a new voice message
+   - Choose delivery method (Telegram or Email)
+   - Set up auto-notifications at your preferred time
+
+## Project Structure
+
 ```
-git clone https://github.com/yourusername/ai-weathervoice.git
-cd ai-weathervoice
+├── app/
+│   ├── api/                 # API routes
+│   ├── components/          # React components
+│   ├── lib/                 # Utility functions
+│   ├── globals.css          # Global styles
+│   └── page.tsx             # Home page
+├── public/                  # Static assets
+└── .env.example             # Environment variables template
 ```
 
-2. Install dependencies
-```
-npm install
-```
+## Contributing
 
-3. Create a `.env.local` file in the root directory with the following variables:
-```
-OPENWEATHER_API_KEY=your_openweather_api_key
-APP_URL=http://localhost:3000
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-4. Start the development server
-```
-npm run dev
-```
+## License
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## Current Implementation Status
-
-This is a prototype/demo implementation with the following limitations:
-
-- **Weather API**: Functional with OpenWeatherMap API (requires API key)
-- **Voice Generation**: Currently mocked - would need integration with a TTS service
-- **Email Delivery**: Currently mocked - would need proper Nodemailer setup
-- **WhatsApp/Telegram**: Currently mocked - would need proper API integration
-- **Scheduling**: Logic included but not fully implemented - needs proper cron setup
-
-## Future Enhancements
-
-- Add user accounts and authentication
-- Implement actual Text-to-Speech with Google TTS, OpenAI TTS, or AWS Polly
-- Set up proper email delivery with Nodemailer
-- Integrate WhatsApp using Twilio API
-- Create a mobile app version
-- Add customizable voice options
-- Implement geolocation for automatic weather detection
-- Store user preferences in a database 
+This project is licensed under the MIT License - see the LICENSE file for details. 
