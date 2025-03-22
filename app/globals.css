@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 240, 245, 255;
+  --background-end-rgb: 255, 255, 255;
+  
+  --primary-rgb: 124, 58, 237;       /* Purple-600 */
+  --primary-light-rgb: 139, 92, 246;  /* Purple-500 */
+  --primary-dark-rgb: 91, 33, 182;    /* Purple-700 */
+  
+  --secondary-rgb: 245, 158, 11;     /* Amber-500 */
+  --secondary-light-rgb: 251, 191, 36; /* Amber-400 */
+  --secondary-dark-rgb: 217, 119, 6;  /* Amber-600 */
+  
+  --success-rgb: 34, 197, 94;        /* Green-500 */
+  --error-rgb: 239, 68, 68;          /* Red-500 */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 226, 232, 240;
+    --background-start-rgb: 2, 6, 23;
+    --background-end-rgb: 15, 23, 42;
+    
+    --primary-light-rgb: 139, 92, 246; /* Purple-500 */
+    --primary-rgb: 124, 58, 237;       /* Purple-600 */
+    --primary-dark-rgb: 109, 40, 217;  /* Purple-700 */
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    )
+    fixed;
+  min-height: 100vh;
+}
+
+/* Glass card effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply text-transparent bg-clip-text;
+  background-image: linear-gradient(
+    135deg, 
+    rgb(var(--primary-light-rgb)) 0%,
+    rgb(var(--primary-rgb)) 50%,
+    rgb(var(--secondary-rgb)) 100%
+  );
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 
+    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-success {
+  @apply px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 
+    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 
+    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-outline {
+  @apply px-4 py-2 border border-purple-600 text-purple-600 rounded-lg 
+    hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-900 dark:hover:bg-opacity-20
+    transition-colors shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+}
+
+/* Input Field */
+.input-field {
+  @apply px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
+    rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none
+    transition-all shadow-sm disabled:opacity-50 disabled:pointer-events-none;
+}
+
+/* Animated Gradient Button */
+.animated-gradient-btn {
+  background-size: 200% 200%;
+  background-image: linear-gradient(
+    45deg,
+    rgb(var(--primary-rgb)),
+    rgb(var(--primary-light-rgb)),
+    rgb(var(--secondary-rgb)),
+    rgb(var(--primary-rgb))
+  );
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Weather gradient backgrounds */
+.weather-gradient-clear {
+  background: linear-gradient(135deg, #4da0ff, #a891ff);
+}
+
+.weather-gradient-clouds {
+  background: linear-gradient(135deg, #b6bac5, #e2e6ea);
+}
+
+.weather-gradient-rain {
+  background: linear-gradient(135deg, #48525c, #a0b4c8);
+}
+
+.weather-gradient-thunderstorm {
+  background: linear-gradient(135deg, #384048, #7676b3);
+}
+
+.weather-gradient-snow {
+  background: linear-gradient(135deg, #b8c9db, #ffffff);
+}
+
+.weather-gradient-mist {
+  background: linear-gradient(135deg, #788795, #b1c4d6);
+}
+
+.weather-gradient-default {
+  background: linear-gradient(135deg, #5d8fc9, #9bafd1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .weather-gradient-clear {
+    background: linear-gradient(135deg, #1a4b91, #4a3cb7);
+  }
+  
+  .weather-gradient-clouds {
+    background: linear-gradient(135deg, #434a59, #61656d);
+  }
+  
+  .weather-gradient-rain {
+    background: linear-gradient(135deg, #2c333a, #455a6b);
+  }
+  
+  .weather-gradient-thunderstorm {
+    background: linear-gradient(135deg, #22262e, #3a3a70);
+  }
+  
+  .weather-gradient-snow {
+    background: linear-gradient(135deg, #536476, #97a5b2);
+  }
+  
+  .weather-gradient-mist {
+    background: linear-gradient(135deg, #3e454d, #627588);
+  }
+  
+  .weather-gradient-default {
+    background: linear-gradient(135deg, #294569, #4c586d);
+  }
+} 

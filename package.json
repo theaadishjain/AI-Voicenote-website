@@ -1,0 +1,42 @@
+{
+  "name": "ai_weathervoice",
+  "version": "1.0.0",
+  "description": "AI Morning Voice Note: Daily Weather & Motivation",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "weather",
+    "voice",
+    "ai",
+    "motivation",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "axios": "^1.6.2",
+    "next": "^14.0.4",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^6.4.17",
+    "autoprefixer": "^10.4.16",
+    "eslint": "8.57.1",
+    "eslint-config-next": "15.2.3",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6"
+  }
+}
