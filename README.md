@@ -1,101 +1,75 @@
 # AI Weather Voice Assistant
 
-A modern web application that provides personalized weather updates and motivational messages delivered as voice notes via Telegram or email.
+An AI-powered weather voice assistant that delivers personalized weather updates and motivational messages through multiple delivery channels.
 
 ## Features
 
-- **Real-time Weather Updates**: Fetches current weather data based on user location
-- **Motivational Messages**: Delivers AI-generated motivational quotes tailored to the weather
-- **Voice Note Delivery**: Converts messages to natural-sounding voice notes
-- **Multiple Delivery Methods**: Send voice notes via Telegram or email
-- **Auto Notifications**: Schedule daily updates at your preferred time
-- **Modern UI**: Clean, responsive design with glass-card effects and dynamic weather themes
+- **Real-time Weather Data**: Get current weather information for any city in the world.
+- **AI-Generated Voice**: Convert weather and motivational content into natural-sounding voice notes.
+- **Multiple Delivery Methods**: Send voice notes via Email, Telegram, Phone Calls, or SMS.
+- **Automatic Notifications**: Schedule daily weather updates at your preferred time.
+- **Motivational Messages**: Receive AI-generated motivational quotes alongside your weather updates.
+- **City Selection**: Search for any city to get its current weather data.
 
-## Tech Stack
-
-- **Frontend**: Next.js, React, Tailwind CSS
-- **AI Integration**: Google Gemini API for generating motivational content
-- **Text-to-Speech**: Google Cloud TTS for natural voice conversion
-- **Messaging**: Telegram Bot API for message delivery
-- **Styling**: Custom CSS with glass morphism effects and dynamic themes
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 16.x or higher
-- npm or yarn
-- Google Cloud account (for TTS)
-- Gemini API access
-- Telegram Bot (optional, for Telegram delivery)
-
-### Installation
+## Setup
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/ai-weathervoice.git
-   cd ai-weathervoice
-   ```
+```bash
+git clone https://github.com/yourusername/ai-weathervoice.git
+cd ai-weathervoice
+```
 
 2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Create a `.env.local` file based on the `.env.example` template:
-   ```
-   cp .env.example .env.local
-   ```
-
-4. Fill in your API keys and credentials in the `.env.local` file
-
-5. Start the development server:
-   ```
-   npm run dev
-   ```
-
-6. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### API Setup
-
-#### Google Cloud TTS
-1. Create a Google Cloud account and enable the Text-to-Speech API
-2. Create a service account with Text-to-Speech access permissions
-3. Download the JSON credentials file
-4. Set the path to this file in your `.env.local`
-
-#### Telegram Bot
-1. Message [@BotFather](https://t.me/BotFather) on Telegram
-2. Create a new bot with `/newbot` command
-3. Copy the API token to your `.env.local` file
-4. Start a conversation with your bot to enable messaging
-
-## Usage
-
-1. View the current weather on the home page
-2. Read the AI-generated motivational message
-3. Use the Voice Note Controls to:
-   - Generate a new voice message
-   - Choose delivery method (Telegram or Email)
-   - Set up auto-notifications at your preferred time
-
-## Project Structure
-
-```
-├── app/
-│   ├── api/                 # API routes
-│   ├── components/          # React components
-│   ├── lib/                 # Utility functions
-│   ├── globals.css          # Global styles
-│   └── page.tsx             # Home page
-├── public/                  # Static assets
-└── .env.example             # Environment variables template
+```bash
+npm install
 ```
 
-## Contributing
+3. Create a `.env.local` file based on `.env.example` and fill in your API keys:
+- OpenWeather API for weather data
+- Google Gemini AI API for text generation
+- ElevenLabs API for voice synthesis
+- Email credentials for email delivery
+- Telegram Bot Token for Telegram delivery
+- Twilio credentials for phone calls and SMS
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+4. Start the development server:
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Delivery Methods
+
+### Email
+Sends the voice note as an audio attachment to the specified email address.
+
+### Telegram
+Sends a text message with weather information to the specified Telegram chat ID.
+
+### Phone Call
+Uses Twilio to call the specified phone number and play the voice note when the call is answered.
+
+### SMS
+Sends an SMS with a link to the voice note using Twilio.
+
+## Automatic Notifications
+
+You can configure automatic daily weather updates:
+1. Navigate to the Settings page
+2. Enable auto-notifications
+3. Set your preferred time, delivery method, and city
+4. Save your settings
+
+## Technologies Used
+
+- **Next.js**: React framework for the frontend and API routes
+- **Google Gemini AI**: For generating weather updates with motivational content
+- **ElevenLabs TTS**: For high-quality text-to-speech conversion
+- **Twilio**: For phone call and SMS delivery
+- **Node-cron**: For scheduling automatic notifications
+- **Tailwind CSS**: For styling the UI
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT 

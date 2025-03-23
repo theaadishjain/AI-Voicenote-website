@@ -19,28 +19,30 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/text-to-speech": "^5.1.0",
     "@google/generative-ai": "^0.2.1",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.2",
+    "elevenlabs": "^1.54.0",
     "form-data": "^4.0.0",
+    "lucide-react": "^0.483.0",
     "next": "^14.0.4",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.17",
     "@types/uuid": "^10.0.0",
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.21",
     "eslint": "8.57.1",
     "eslint-config-next": "15.2.3",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.3.6"
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17"
   }
 }

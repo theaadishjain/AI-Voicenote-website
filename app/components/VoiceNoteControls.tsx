@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { weatherData } from '@/app/types';
 
-type DeliveryMethod = 'email' | 'telegram';
+type DeliveryMethod = 'email' | 'telegram' | 'twilio-call' | 'twilio-sms';
 
-export default function VoiceNoteControls() {
+export default function VoiceNoteControls({ weatherData }: { weatherData: weatherData }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- will be used in future function implementations
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,13 +18,43 @@ export default function VoiceNoteControls() {
   const [contactPlaceholder, setContactPlaceholder] = useState('user@example.com');
   const [autoNotify, setAutoNotify] = useState(false);
   const [notificationTime, setNotificationTime] = useState('06:00');
+  const [audioFilename, setAudioFilename] = useState<string | null>(null);
+  const [city, setCity] = useState<string>('');
+  const [cityInput, setCityInput] = useState('');
+  const [motivationalMessage, setMotivationalMessage] = useState<string>('');
+  const [sending, setSending] = useState(false);
+  const [usedFallback, setUsedFallback] = useState(false);
   const router = useRouter();
 
   const deliveryMethods = [
     { value: 'email', label: 'Email' },
-    { value: 'telegram', label: 'Telegram' }
-    // Removed WhatsApp as it's not currently supported
+    { value: 'telegram', label: 'Telegram' },
+    { value: 'twilio-call', label: 'Phone Call' },
+    { value: 'twilio-sms', label: 'SMS' }
   ];
+
+  useEffect(() => {
+    if (weatherData && weatherData.city) {
+      setCity(weatherData.city);
+    }
+  }, [weatherData]);
+  
+  // Fetch motivational message when component mounts
+  useEffect(() => {
+    async function fetchMotivationalMessage() {
+      try {
+        const response = await fetch('/api/motivation');
+        const data = await response.json();
+        if (data.quote) {
+          setMotivationalMessage(data.quote);
+        }
+      } catch (error) {
+        console.error('Error fetching motivational message:', error);
+      }
+    }
+    
+    fetchMotivationalMessage();
+  }, []);
 
   // Update placeholder based on delivery method
   const handleDeliveryMethodChange = (method: DeliveryMethod) => {
@@ -35,84 +66,138 @@ export default function VoiceNoteControls() {
       case 'telegram':
         setContactPlaceholder('Chat ID (e.g., 123456789)');
         break;
+      case 'twilio-call':
+      case 'twilio-sms':
+        setContactPlaceholder('Phone number (e.g., +1234567890)');
+        break;
     }
   };
 
   const handleGenerateVoice = async () => {
     setIsLoading(true);
     setError(null);
-    setSuccess(null);
+    setAudioFilename(null);
+    setUsedFallback(false);
     
     try {
-      // Get the city name from the URL search params (if available)
-      const urlParams = new URLSearchParams(window.location.search);
-      const city = urlParams.get('city') || 'London';
+      // Validate required weather data
+      if (!weatherData || !weatherData.city || weatherData.temperature === undefined || !weatherData.description) {
+        setError('Weather data must include city, temperature, and description');
+        setIsLoading(false);
+        return;
+      }
       
-      // Get weather data from the weather API for the selected city
-      const weatherResponse = await axios.get(`/api/weather?city=${encodeURIComponent(city)}`);
-      const weatherData = weatherResponse.data;
+      // Fetch motivational message if not already available
+      if (!motivationalMessage) {
+        try {
+          const response = await fetch('/api/motivation');
+          const data = await response.json();
+          if (data.quote) {
+            setMotivationalMessage(data.quote);
+          }
+        } catch (err) {
+          console.error('Error fetching motivational message:', err);
+        }
+      }
       
-      // Get motivational message
-      const motivationResponse = await axios.get('/api/motivation');
-      const motivationalMessage = motivationResponse.data?.quote;
-      
-      // Call the generate-voice API with weather data and optional motivational message
-      const response = await axios.post('/api/generate-voice', {
-        weatherData: {
-          location: weatherData.city,
-          temperature: weatherData.temperature,
-          description: weatherData.description,
-          humidity: weatherData.humidity,
-          wind: weatherData.windSpeed
+      // Generate voice note
+      const response = await fetch('/api/generate-voice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        motivationalMessage
+        body: JSON.stringify({
+          weatherData: {
+            city: weatherData.city,
+            temperature: weatherData.temperature,
+            description: weatherData.description,
+            humidity: weatherData.humidity || 0,
+            windSpeed: weatherData.windSpeed || 0,
+          },
+          motivationalMessage,
+          sendNow: false,
+        }),
       });
       
-      setSuccess('Voice generated successfully!');
-      // Refresh the page to update the voice note
-      router.refresh();
-    } catch (err) {
-      console.error('Error generating voice:', err);
-      setError('Failed to generate voice. Please try again.');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Failed to generate voice note');
+      }
+      
+      setAudioFilename(data.audioFilename);
+      setUsedFallback(data.usedFallback || false);
+      
+      if (data.usedFallback) {
+        console.log('Generated voice note using fallback method');
+      } else {
+        console.log('Generated voice note using ElevenLabs');
+      }
+    } catch (err: any) {
+      console.error('Error generating voice note:', err);
+      setError(err.message || 'An error occurred while generating the voice note');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSendVoice = async () => {
-    setIsLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    // Validate contact info
-    if (!contactInfo) {
-      setError(`Please enter a valid ${deliveryMethod === 'email' ? 'email address' : 'chat ID'}.`);
-      setIsLoading(false);
+    if (!audioFilename) {
+      setError('Please generate a voice note first');
       return;
     }
     
+    if (!deliveryMethod) {
+      setError('Please select a delivery method');
+      return;
+    }
+    
+    if (!contactInfo) {
+      setError('Please enter your contact information');
+      return;
+    }
+    
+    // Validate required weather data
+    if (!weatherData || !weatherData.city || weatherData.temperature === undefined || !weatherData.description) {
+      setError('Weather data must include city, temperature, and description');
+      return;
+    }
+    
+    setSending(true);
+    setError(null);
+    
     try {
-      // First, get the audio filename
-      const voiceResponse = await axios.get('/api/latest-voice');
-      const { audioFilename } = voiceResponse.data;
-      
-      if (!audioFilename) {
-        throw new Error('No voice note available. Please generate one first.');
-      }
-      
-      // Now send the voice note with the correct parameters
-      await axios.post('/api/send-voice', { 
-        audioFilename,
-        deliveryMethod,
-        contactInfo
+      const response = await fetch('/api/send-voice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          audioFilename,
+          deliveryMethod,
+          contactInfo,
+          weatherData: {
+            city: weatherData.city,
+            temperature: weatherData.temperature,
+            description: weatherData.description,
+            humidity: weatherData.humidity || 0,
+            windSpeed: weatherData.windSpeed || 0,
+          },
+        }),
       });
       
-      setSuccess(`Voice sent successfully via ${deliveryMethod}!`);
-    } catch (err) {
-      console.error('Error sending voice:', err);
-      setError(`Failed to send voice via ${deliveryMethod}. Please try again.`);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send voice note');
+      }
+      
+      alert('Voice note sent successfully!');
+    } catch (err: any) {
+      console.error('Error sending voice note:', err);
+      setError(err.message || 'An error occurred while sending the voice note');
     } finally {
-      setIsLoading(false);
+      setSending(false);
     }
   };
 
@@ -163,6 +248,34 @@ export default function VoiceNoteControls() {
             </svg>
           </div>
           <h2 className="text-2xl font-bold ml-2">Voice Controls</h2>
+        </div>
+
+        {/* City selection form */}
+        <div className="mb-6">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (cityInput.trim()) {
+              setCity(cityInput.trim());
+              setSuccess(`City changed to ${cityInput.trim()}`);
+            }
+          }} className="flex space-x-2">
+            <input
+              type="text"
+              placeholder="Enter city name"
+              value={cityInput}
+              onChange={(e) => setCityInput(e.target.value)}
+              className="input-field flex-grow"
+              disabled={isLoading}
+            />
+            <button 
+              type="submit" 
+              disabled={isLoading || !cityInput.trim()} 
+              className="btn-outline"
+            >
+              Set City
+            </button>
+          </form>
+          <p className="text-sm text-gray-500 mt-1">Current city: {city}</p>
         </div>
 
         {error && (

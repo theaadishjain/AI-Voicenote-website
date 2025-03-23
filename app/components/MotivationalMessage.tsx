@@ -3,124 +3,110 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-interface MotivationalQuote {
-  text: string;
+interface Quote {
+  quote: string;
   author: string;
 }
 
 export default function MotivationalMessage() {
-  const [quote, setQuote] = useState<MotivationalQuote | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [motivationalQuote, setMotivationalQuote] = useState<Quote | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchQuote = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get('/api/motivation');
-      setQuote(response.data);
-    } catch (err) {
-      console.error('Error fetching motivational quote:', err);
-      setError('Failed to load motivational message. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchQuote();
+    const fetchMotivationalQuote = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get('/api/motivation');
+        
+        if (response.data && response.data.quote) {
+          setMotivationalQuote({
+            quote: response.data.quote,
+            author: response.data.author || 'Unknown'
+          });
+        } else {
+          throw new Error('Invalid response format');
+        }
+      } catch (err) {
+        console.error('Error fetching motivational quote:', err);
+        setError('Failed to load motivational quote. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMotivationalQuote();
+    
+    // Refresh quote every 30 minutes
+    const interval = setInterval(fetchMotivationalQuote, 30 * 60 * 1000);
+    
+    return () => clearInterval(interval);
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center min-h-[280px] relative overflow-hidden">
-        <div className="absolute -left-12 -bottom-12 w-48 h-48 bg-indigo-400/10 rounded-full"></div>
-        <div className="absolute -right-12 -top-12 w-32 h-32 bg-pink-400/10 rounded-full"></div>
-        <div className="relative z-10 text-center">
-          <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-500"></div>
-          </div>
-          <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-emerald-500 to-indigo-500 bg-clip-text text-transparent">
-            Finding Inspiration
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400">Looking for the perfect motivational quote...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="glass-card rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-red-400/10 rounded-full"></div>
-        <div className="absolute -left-12 -top-12 w-32 h-32 bg-red-400/10 rounded-full"></div>
-        <div className="relative z-10">
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-400 to-red-600 text-white rounded-xl shadow-sm">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold ml-2">Error</h2>
-          </div>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
-          <button 
-            onClick={fetchQuote} 
-            className="btn-secondary w-full"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="glass-card rounded-2xl p-6 relative overflow-hidden">
-      <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-emerald-400/10 rounded-full"></div>
-      <div className="absolute -left-12 -top-12 w-32 h-32 bg-indigo-400/10 rounded-full"></div>
-      
-      <div className="relative z-10">
-        <div className="flex items-center mb-6">
-          <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-indigo-400 to-indigo-600 text-white rounded-xl shadow-sm">
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z" />
-            </svg>
+    <div className="h-full flex flex-col">
+      <h2 className="text-2xl font-bold mb-4 flex items-center">
+        <svg className="w-6 h-6 mr-2 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z" clipRule="evenodd" />
+        </svg>
+        Daily Motivation
+      </h2>
+
+      <div className="mt-2 flex-grow">
+        {loading ? (
+          <div className="animate-pulse flex flex-col h-full justify-center items-center">
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-2.5"></div>
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2 mb-2.5"></div>
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
           </div>
-          <h2 className="text-xl font-bold ml-2">Daily Inspiration</h2>
-        </div>
-        
-        {quote && (
-          <div className="mb-6">
-            <div className="relative mb-6 pl-6 pr-2">
-              <svg className="absolute top-0 left-0 w-5 h-5 text-indigo-400 transform -translate-y-2 -translate-x-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z" />
-              </svg>
-              <p className="text-lg font-medium text-gray-700 dark:text-gray-300 italic">
-                {quote.text}
-              </p>
-              <svg className="absolute bottom-0 right-0 w-5 h-5 text-indigo-400 transform translate-y-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14,17H18V11H14V17M6,17H10V11H6V17M10,7V11H14V7H10M6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22L6,22Z" />
-              </svg>
-            </div>
-            
-            <div className="text-right">
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">― {quote.author}</p>
-            </div>
+        ) : error ? (
+          <div className="text-red-500 h-full flex items-center justify-center">
+            <p>{error}</p>
+          </div>
+        ) : motivationalQuote ? (
+          <div className="relative h-full flex flex-col justify-center">
+            <div className="absolute text-6xl opacity-20 left-0 top-0 text-pink-300">"</div>
+            <blockquote className="pl-4 italic text-gray-600 dark:text-gray-300 relative z-10">
+              <p className="mb-4">{motivationalQuote.quote}</p>
+              <footer className="text-sm text-right text-gray-500 dark:text-gray-400">
+                — {motivationalQuote.author}
+              </footer>
+            </blockquote>
+            <div className="absolute text-6xl opacity-20 right-0 bottom-0 text-pink-300">"</div>
+          </div>
+        ) : (
+          <div className="text-center h-full flex items-center justify-center">
+            <p>No quote available at the moment.</p>
           </div>
         )}
-        
-        <div className="flex justify-end">
-          <button
-            onClick={fetchQuote}
-            className="btn-outline text-sm flex items-center"
-          >
-            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
-            </svg>
-            New Quote
-          </button>
-        </div>
+      </div>
+      
+      <div className="flex justify-center mt-4">
+        <button 
+          onClick={() => {
+            setLoading(true);
+            axios.get('/api/motivation')
+              .then(response => {
+                if (response.data && response.data.quote) {
+                  setMotivationalQuote({
+                    quote: response.data.quote,
+                    author: response.data.author || 'Unknown'
+                  });
+                }
+                setLoading(false);
+              })
+              .catch(err => {
+                console.error('Error refreshing quote:', err);
+                setError('Failed to refresh quote');
+                setLoading(false);
+              });
+          }}
+          className="px-3 py-1 text-sm bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors"
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'New Quote'}
+        </button>
       </div>
     </div>
   );

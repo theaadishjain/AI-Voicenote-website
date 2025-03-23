@@ -1,6 +1,6 @@
 {
-  "/api/weather/route": "app/api/weather/route.js",
   "/page": "app/page.js",
-  "/api/generate-voice/route": "app/api/generate-voice/route.js",
-  "/api/motivation/route": "app/api/motivation/route.js"
+  "/api/weather/route": "app/api/weather/route.js",
+  "/api/motivation/route": "app/api/motivation/route.js",
+  "/api/generate-voice/route": "app/api/generate-voice/route.js"
 }
